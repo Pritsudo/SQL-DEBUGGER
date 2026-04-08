@@ -164,7 +164,7 @@ Return JSON only with keys query, explanation, submit.
 
 def _get_client() -> OpenAI | None:
     base_url = os.getenv("API_BASE_URL", "").strip()
-    api_key = os.getenv("HF_TOKEN", "").strip()
+    api_key = os.getenv("API_KEY", "").strip() or os.getenv("HF_TOKEN", "").strip()
     if not base_url or not api_key:
         return None
     return OpenAI(base_url=base_url, api_key=api_key)
