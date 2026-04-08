@@ -4,7 +4,7 @@ from typing import Any
 
 import httpx
 
-from model import SqlDebugAction, SqlDebugObservation, StepResponse
+from models import SqlDebugAction, SqlDebugObservation, StepResponse
 
 
 class SqlDebugEnv:

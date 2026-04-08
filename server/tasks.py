@@ -4,7 +4,7 @@ import sqlite3
 from dataclasses import dataclass
 from typing import Callable, List, Sequence, Tuple
 
-from model import SqlDebugReward
+from models import SqlDebugReward
 
 Rows = List[Tuple]
 

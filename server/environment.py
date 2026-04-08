@@ -4,7 +4,7 @@ import os
 import sqlite3
 from dataclasses import dataclass
 
-from model import SqlDebugAction, SqlDebugObservation, SqlDebugReward, StepResponse
+from models import SqlDebugAction, SqlDebugObservation, SqlDebugReward, StepResponse
 from server.tasks import TASKS, TaskSpec
 
 

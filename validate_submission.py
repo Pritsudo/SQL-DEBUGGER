@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 from fastapi.testclient import TestClient
 
-from model import SqlDebugAction, SqlDebugObservation, SqlDebugReward
+from models import SqlDebugAction, SqlDebugObservation, SqlDebugReward
 from server.app import app
 from server.tasks import TASKS
 

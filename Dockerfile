@@ -10,7 +10,7 @@ COPY requirements.txt /app/requirements.txt
 COPY server /app/server
 COPY client.py /app/client.py
 COPY inference.py /app/inference.py
-COPY model.py /app/model.py
+COPY models.py /app/models.py
 COPY openenv.yaml /app/openenv.yaml
 COPY README.md /app/README.md
 COPY validate_submission.py /app/validate_submission.py

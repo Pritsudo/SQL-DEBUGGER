@@ -8,7 +8,7 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 import uvicorn
 
-from model import SqlDebugAction, StepResponse
+from models import SqlDebugAction, StepResponse
 from server.environment import SqlDebugEnvironment
 from server.tasks import TASKS
 

@@ -9,7 +9,7 @@ import json
 from openai import OpenAI
 
 from client import SqlDebugEnv
-from model import SqlDebugAction, SqlDebugObservation
+from models import SqlDebugAction, SqlDebugObservation
 from server.tasks import TASKS
 
 SYSTEM_PROMPT = """You are a SQL debugging agent.
