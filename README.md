@@ -1,3 +1,14 @@
+---
+title: SQL DEBUGGER
+emoji: 🚀
+colorFrom: green
+colorTo: gray
+sdk: docker
+pinned: false
+license: gpl-3.0
+short_description: OpenEnv-style RL environment for SQL debugging
+---
+
 # SQL Debug Gym
 
 SQL Debug Gym is a flat, OpenEnv-style RL environment for SQL debugging. It uses FastAPI plus in-memory SQLite and includes 3 graded tasks for join repair, ETL debugging, and query optimization.
@@ -109,6 +120,49 @@ python inference.py
 
 The root [`inference.py`](inference.py) auto-loads values from [`.env`](.env), runs all three tasks one by one, and emits the required `[START]`, `[STEP]`, and `[END]` structured logs.
 
+Store output after each run (append mode):
+
+```powershell
+python inference.py *>> SQL_results.txt
+```
+
+This appends every new run to [`SQL_results.txt`](/d:/RL/SQL_DEBUGGER/SQL_results.txt) instead of overwriting previous runs.
+
+## Baseline Score
+
+Reference local run (April 8, 2026, from [`SQL_result.txt`](/d:/RL/SQL_DEBUGGER/SQL_result.txt)):
+
+- Model: `Qwen/Qwen2.5-72B-Instruct`
+- Tasks completed: `3/3`
+- Average score: `0.6577`
+
+Per-task baseline:
+
+| Task ID | Score |
+|---|---|
+| `fix_broken_join` | `1.0000` |
+| `debug_etl_pipeline` | `0.2200` |
+| `optimize_slow_query` | `0.7530` |
+
+Reproduce:
+
+```cmd
+python inference.py
+```
+
+Scoring factors (from [`tasks.py`](/d:/RL/SQL_DEBUGGER/server/tasks.py) and [`environment.py`](/d:/RL/SQL_DEBUGGER/server/environment.py)):
+
+- `correctness` = `0.6 * row_match_score`
+- `efficiency` = `0.2 * efficiency_score`
+- `progress` = `0.2 * row_match_score`
+- `step_bonus` = `0.02` when the submitted SQL executes without runtime error, else `0.0`
+- `total` = `min(1.0, correctness + efficiency + progress + step_bonus)`
+
+Note: your structured log format (`[STEP] ... reward=...`) records task totals, not individual factor components.  
+To capture per-factor values (`correctness`, `efficiency`, `progress`, `step_bonus`), save the pretty stderr output from `inference.py`.
+
+Note: if external model API calls are unavailable, the runner may use deterministic fallback logic (`OPENENV_USE_FALLBACK=1`), which can still produce perfect task scores.
+
 ## API Endpoints
 
 Base URL (local): `http://127.0.0.1:7860`
@@ -167,7 +221,6 @@ The validator checks:
 - Docker build when a local Docker daemon is available
 
 ## Docker
-
 Build:
 
 ```
