@@ -1,0 +1,1 @@
+"""SQL Debug Gym package marker for OpenEnv validation."""
