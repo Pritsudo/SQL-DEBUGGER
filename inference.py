@@ -163,8 +163,8 @@ Return JSON only with keys query, explanation, submit.
 
 
 def _get_client() -> OpenAI | None:
-    base_url = os.getenv("API_BASE_URL", "").strip()
-    api_key = os.getenv("API_KEY", "").strip() or os.getenv("HF_TOKEN", "").strip()
+    base_url = os.getenv("API_BASE_URL", "https://router.huggingface.co/v1")
+    api_key = os.getenv("API_KEY", "") or os.getenv("HF_TOKEN", "")
     if not base_url or not api_key:
         return None
     return OpenAI(base_url=base_url, api_key=api_key)
@@ -212,7 +212,7 @@ def _task_ids() -> list[str]:
 def run_all_tasks() -> int:
     _load_local_env()
     env_base_url = os.getenv("SQL_GYM_BASE_URL", "http://127.0.0.1:7860").strip()
-    model_name = os.getenv("MODEL_NAME", "").strip()
+    model_name = os.getenv("MODEL_NAME", "Qwen/Qwen2.5-72B-Instruct").strip()
     allow_fallback = os.getenv("OPENENV_USE_FALLBACK", "1").strip() != "0"
     benchmark_name = os.getenv("OPENENV_BENCHMARK", "sql_debug_gym").strip() or "sql_debug_gym"
     client = _get_client()
