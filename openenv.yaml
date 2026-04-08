@@ -1,0 +1,54 @@
+name: sql-debug-gym
+version: 0.1.0
+description: OpenEnv-compatible SQL debugging environment for RL agents operating over a workflow analytics schema.
+motivation: Evaluate LLM agents on realistic SQL repair, ETL debugging, and query optimization tasks with typed observations and deterministic graders.
+entrypoint: server.app:app
+type: http
+spec_version: "1.0"
+metadata:
+  repository: sql-debug-gym
+  runtime:
+    python: "3.11"
+    cpu: "2 vCPU"
+    memory: "8 GB"
+  environment:
+    database: sqlite_in_memory
+    server: fastapi
+    transport: http
+  inference:
+    script: inference.py
+    structured_logs:
+      start: "[START]"
+      step: "[STEP]"
+      end: "[END]"
+  env_vars:
+    required:
+      - API_BASE_URL
+      - MODEL_NAME
+      - HF_TOKEN
+    optional:
+      - SQL_GYM_BASE_URL
+      - OPENENV_TASK_MODE
+      - OPENENV_USE_FALLBACK
+actions:
+  model: model.SqlDebugAction
+observations:
+  model: model.SqlDebugObservation
+rewards:
+  model: model.SqlDebugReward
+tasks:
+  - id: fix_broken_join
+    name: Fix Broken Join
+    description: Repair a query with an invalid join key, date boundary bug, and ORDER BY alias typo.
+    difficulty: easy
+    grader: server.tasks._fix_broken_join_grader
+  - id: debug_etl_pipeline
+    name: Debug ETL Pipeline
+    description: Repair an ETL-style queue query with incorrect domain lookup, filtering, and ranking logic.
+    difficulty: medium
+    grader: server.tasks._debug_etl_grader
+  - id: optimize_slow_query
+    name: Optimize Slow Query
+    description: Rewrite a logically incorrect nested aggregate into a correct and efficient ranked query.
+    difficulty: hard
+    grader: server.tasks._optimize_query_grader

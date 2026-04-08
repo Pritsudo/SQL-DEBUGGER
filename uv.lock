@@ -1,0 +1,17 @@
+version = 1
+revision = 1
+requires-python = ">=3.10"
+
+[[package]]
+name = "sql-debug-gym"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+  { name = "fastapi" },
+  { name = "uvicorn" },
+  { name = "pydantic" },
+  { name = "httpx" },
+  { name = "openai" },
+  { name = "pyyaml" },
+  { name = "openenv-core" },
+]
