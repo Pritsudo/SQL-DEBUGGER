@@ -14,7 +14,6 @@ COPY model.py /app/model.py
 COPY openenv.yaml /app/openenv.yaml
 COPY README.md /app/README.md
 COPY validate_submission.py /app/validate_submission.py
-COPY .env /app/.env
 
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r /app/requirements.txt
