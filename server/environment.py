@@ -7,6 +7,9 @@ from dataclasses import dataclass
 from models import SqlDebugAction, SqlDebugObservation, SqlDebugReward, StepResponse
 from server.tasks import TASKS, TaskSpec
 
+MIN_STRICT_SCORE = 0.1
+MAX_STRICT_SCORE = 0.9
+
 
 @dataclass
 class EpisodeState:
@@ -128,7 +131,8 @@ class SqlDebugEnvironment:
             s.done = True
             graded = s.task.grader(action.query, s.task.name, s.step_number, s.task.max_steps)
             graded.step_bonus = round(step_bonus, 4)
-            graded.total = round(min(1.0, graded.total + step_bonus), 4)
+            strict_total = max(MIN_STRICT_SCORE, min(MAX_STRICT_SCORE, graded.total + step_bonus))
+            graded.total = round(strict_total, 4)
             s.final_reward = graded
             if not ok:
                 s.error = "Final submission had SQL execution error."

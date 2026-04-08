@@ -7,6 +7,8 @@ from typing import Callable, List, Sequence, Tuple
 from models import SqlDebugReward
 
 Rows = List[Tuple]
+MIN_STRICT_SCORE = 0.1
+MAX_STRICT_SCORE = 0.9
 
 
 @dataclass(frozen=True)
@@ -51,6 +53,10 @@ def _efficiency_score(step_number: int, max_steps: int) -> float:
     extra_steps = max(0, step_number - 3)
     span = max(1, max_steps - 3)
     return max(0.0, 1.0 - (extra_steps / span))
+
+
+def _strict_unit(value: float) -> float:
+    return max(MIN_STRICT_SCORE, min(MAX_STRICT_SCORE, float(value)))
 
 
 
@@ -106,8 +112,9 @@ def _generic_grader(task_name: str, submission_query: str, step_number: int, max
         progress = correctness
         efficiency = _efficiency_score(step_number, max_steps)
 
+        total = _strict_unit((0.6 * correctness) + (0.2 * efficiency) + (0.2 * progress))
         return SqlDebugReward(
-            total=round((0.6 * correctness) + (0.2 * efficiency) + (0.2 * progress), 4),
+            total=round(total, 4),
             correctness=round(0.6 * correctness, 4),
             efficiency=round(0.2 * efficiency, 4),
             progress=round(0.2 * progress, 4),
@@ -118,8 +125,9 @@ def _generic_grader(task_name: str, submission_query: str, step_number: int, max
         intent_score = _heuristic_intent_score(task_name, submission_query)
         correctness = min(0.45, 0.45 * intent_score)
         progress = min(0.60, 0.60 * intent_score)
+        total = _strict_unit((0.6 * correctness) + (0.2 * efficiency) + (0.2 * progress))
         return SqlDebugReward(
-            total=round((0.6 * correctness) + (0.2 * efficiency) + (0.2 * progress), 4),
+            total=round(total, 4),
             correctness=round(0.6 * correctness, 4),
             efficiency=round(0.2 * efficiency, 4),
             progress=round(0.2 * progress, 4),
