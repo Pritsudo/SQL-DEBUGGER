@@ -7,6 +7,7 @@ sdk: docker
 pinned: false
 license: gpl-3.0
 short_description: OpenEnv-style RL environment for SQL debugging
+base_path: /web
 ---
 
 # SQL Debug Gym
